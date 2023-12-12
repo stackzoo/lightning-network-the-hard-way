@@ -38,11 +38,11 @@ You can chek che progress by inspecting the container logs:
 docker logs lnd-testnet -f
 ```  
 
-Or by checking the size of the .lnd folder mounted on our local machine:  
+Or by checking the size of the `.lnd` folder mounted on our local machine:  
 ```console
 cd  ~/.lnd && watch du -sh *
 ```  
-At the current state of the blockchain the size of the data directory needs to reach almos 700MB befire synchronization is completed.  
+At the current state of the blockchain the size of the data directory needs to reach almos *700 MB* before synchronization is completed.  
 
 Once the sync process is over we need to obtain some Bitcoin on the testnet.  
 
@@ -51,7 +51,7 @@ Generate a testnet Address via *lncli*:
 docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon newaddress p2wkh
 ```  
 
-Sample Output:
+Sample output:
 ```json
 {
     "address": "tb1q2usfv065frackdpzn9grar0cag8mdg5wyd7q4h"
@@ -69,7 +69,7 @@ Now check your lightning wallet balance:
 ```console
 docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon walletbalance
 ```  
-Sample Output:  
+Sample output:  
 ```json
 {
     "total_balance": "1245885",
@@ -108,7 +108,7 @@ docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/t
 
 
 
-Sample Output:
+Sample output:
 ```json
 {
         "funding_txid": "bfbf2b1096d76e78cb81dc4318d0403ef63efef2b783a4ff8cad85ee39c97a33"
@@ -126,7 +126,7 @@ docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/t
 ```  
 
 
-This may seems strange...we have 0 channels opened.
+This may seems strange...we have 0 channels opened.  
 In reality this is perfectly normal as our channel funding transaction on the blockchain need to wait 3 block confirmations before it is considered secure.  
 Wait some minutes and retry:  
 ```json
@@ -349,7 +349,7 @@ Output sample:
 ## Conclusions
 In this tutorial we saw the following:
 
-- spin up our own lightning node (LND)
+- spin up our own lightning node (*LND*)
 - create a new wallet
 - get some btc on the testnet
 - open a new outbound channel
