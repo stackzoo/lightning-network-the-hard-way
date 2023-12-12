@@ -358,7 +358,7 @@ In this tutorial we saw the following:
 If you also want to be able to receive payment you need an inbound channel.  
 The procedure for this is similar in the sense that there are some services that will open channels with you, in exchange for a small fee.  
 
-Usually you need to specify your node key in order for other nodes to be able to open channels with you.
+Usually you need to specify your node key in order for other nodes to be able to open channels with you.  
 You can determine your node pubkey with the following command:
 
 ```console
