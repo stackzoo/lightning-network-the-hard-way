@@ -1,6 +1,6 @@
 # LIGHTNING NETWORK⚡ THE "HARD" WAY
 The following is a reproducible proof of concept to get started with the *Bitcoin Lightning Network*.  
-In order to following this you dont need any Bitcoin on the main blockchain as we well use the *testnet*.  
+In order to follow this you dont need any Bitcoin on the main blockchain as we well use the *testnet*.  
 
 > [!WARNING]  
 > This is intended as a local lab to learn the basics of lightning node operations, don't follow this to deploy a node in production!
