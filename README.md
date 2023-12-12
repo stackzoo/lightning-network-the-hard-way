@@ -188,8 +188,8 @@ Wait some minutes and retry:
 }
 ```  
 
-Now our outbound channel is open we have sufficient funds to make some transactions!  
-Go to [this](https://starblocks.acinq.co/) site, select the product you want, add it to cart and then click "checkout".  
+Now our outbound channel is open and we have sufficient funds to make some transactions!  
+Go to [this](https://starblocks.acinq.co/) e-commerce website, select the product you want, add it to cart and then click "checkout".  
 You will be presented with an invoice similar to this:  
 ![invoice](images/invoice.png)  
 <br/>
