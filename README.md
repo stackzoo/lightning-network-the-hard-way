@@ -127,7 +127,7 @@ docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/t
 
 
 This may seems strange...we have 0 channels opened.  
-In reality this is perfectly normal as our channel funding transaction on the blockchain need to wait 3 block confirmations before it is considered secure.  
+In reality this is perfectly normal as our channel funding transaction on the blockchain need to wait 3 block confirmations before it is considered settled.  
 Wait some minutes and retry:  
 ```json
 {
