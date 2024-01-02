@@ -9,12 +9,13 @@ In order to follow this you dont need bitcoins on the main blockchain as we will
 
 ## Prerequisites
 - docker
+- desire to learn about ₿itcoin & lightning⚡
 
 ## Getting started
 
 For this tutorial we will use [LND](https://github.com/lightningnetwork/lnd).  
 *LND* is one of the most popular implementations of a lightning node, written in the *Go* programming language.  
-pull a specific version of *LND container image* from *dockerhub*:  
+Pull a specific version of *LND container image* from *dockerhub*:  
 ```console
 docker pull lightninglabs/lnd:v0.17.3-beta
 ```  
@@ -54,7 +55,7 @@ At the current state of the blockchain (December 2023) the size of the data dire
 
 > [!NOTE]  
 > All the following lncli commands will specify a macaroon to use in order to authenticate with our node.  
-> A [macaroon](https://en.wikipedia.org/wiki/Macaroons_(computer_science))is a type of token used for authentication and authorization.  
+> A [macaroon](https://en.wikipedia.org/wiki/Macaroons_(computer_science)) is a type of token used for authentication and authorization.  
 > In the realm of distributed systems, macaroons are often used to provide secure access to decentralised APIs or services.  
 
 Export an environment variable with the admin macaroon path inside our node's container:  
@@ -210,6 +211,8 @@ Wait some minutes and retry:
 
 Now our outbound channel is open and we have sufficient funds to make some transactions!  
 Go to [this](https://starblocks.acinq.co/) e-commerce website, select the product you want, add it to cart and then click "checkout".  
+![shop](images/e-shop.png)  
+
 You will be presented with an invoice similar to this:  
 ![invoice](images/invoice.png)  
 <br/>
