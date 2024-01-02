@@ -3,14 +3,18 @@ The following is a reproducible proof of concept to get started with the *Bitcoi
 In order to follow this you dont need bitcoins on the main blockchain as we will use the *testnet*.  
 
 > [!WARNING]  
-> This is intended as a local lab to learn the basics of lightning node operations, don't follow this to deploy a node in production!
+> This is intended as a local lab to learn the basics of lightning node operations, don't follow this to deploy a node in production!  
+> Also Keep in mind that the utilized Bitcoins hold no intrinsic value, as they pertain to the test blockchain.  
+
 
 ## Prerequisites
 - docker
 
 ## Getting started
 
-pull a specific version of [LND](https://github.com/lightningnetwork/lnd) container image from dockerhub:  
+For this tutorial we will use [LND](https://github.com/lightningnetwork/lnd).  
+*LND* is one of the most popular implementations of a lightning node, written in the *Go* programming language.  
+pull a specific version of *LND container image* from *dockerhub*:  
 ```console
 docker pull lightninglabs/lnd:v0.17.3-beta
 ```  
@@ -20,6 +24,9 @@ Now run the container in *testnet* mode and with [neutrino](https://github.com/l
 ```console
 docker run --name lnd-testnet -v /Users/rago/.lnd/:/root/.lnd  lightninglabs/lnd:v0.17.3-beta --bitcoin.active --bitcoin.testnet --bitcoin.node=neutrino neutrino.addpeer=btcd-testnet.lightning.computer neutrino.feeurl=https://nodes.lightning.computer/fees/v1/btctestnet-fee-estimates.json
 ```  
+> [!NOTE]  
+> *Neutrino* is a lightweight client-side technology designed to enhance the privacy and efficiency of wallet applications.  
+> Neutrino is an improvement upon traditional SPV, which allows users to verify the inclusion of transactions in the Bitcoin blockchain without downloading the entire blockchain.  
 
 The previous command also maps a local volume path (my user home directory) to the `.lnd` data directory inside our container.  
 In this way we ensure persistency of our Lightning node and wallet data even when our container stops.  
@@ -30,10 +37,10 @@ Exec inside the running container and launch the command to create a new wallet 
 docker exec -it lnd-testnet lncli create  
 ```  
 
-Follow the instructions to generate a new wallet seed and save it somewhere safe.  
+Follow the instructions on the screen to generate a new wallet seed.  
 
-Ok now we need to wait some time as *neutrino* is starting to sync blocks headers for the Bitcoin testnet chain, this may take up to 1 hour with the current blockchain state.  
-You can chek che progress by inspecting the container logs:  
+Now we need to wait some time as *neutrino* is starting to sync blocks headers for the Bitcoin testnet chain, this may take up to 1 hour with the current blockchain state.  
+You can chek che progress by inspecting the container's logs:  
 ```console
 docker logs lnd-testnet -f
 ```  
@@ -42,13 +49,24 @@ Or by checking the size of the `.lnd` folder mounted on our local machine:
 ```console
 cd  ~/.lnd && watch du -sh *
 ```  
-At the current state of the blockchain the size of the data directory needs to reach almos *700 MB* before synchronization is completed.  
+At the current state of the blockchain (December 2023) the size of the data directory needs to reach almos *700 MB* before synchronization is completed.  
 
-Once the sync process is over we need to obtain some Bitcoin on the testnet.  
+
+> [!NOTE]  
+> All the following lncli commands will specify a macaroon to use in order to authenticate with our node.  
+> A [macaroon](https://en.wikipedia.org/wiki/Macaroons_(computer_science))is a type of token used for authentication and authorization.  
+> In the realm of distributed systems, macaroons are often used to provide secure access to decentralised APIs or services.  
+
+Export an environment variable with the admin macaroon path inside our node's container:  
+```console
+export MACAROON_PATH=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon
+```  
+
+
 
 Generate a testnet Address via *lncli*:  
 ```console
-docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon newaddress p2wkh
+docker exec -it lnd-testnet lncli --macaroonpath="$MACAROON_PATH" newaddress p2wkh
 ```  
 
 Sample output:
@@ -59,7 +77,9 @@ Sample output:
 ```  
   
 
-Send some testnet bitcoin by leveraging faucet services like [coinfaucet](https://coinfaucet.eu/en/btc-testnet/) by inserting the previously generated address.  
+Now we need to obtain some Bitcoin on the testnet.  
+
+Send some testnet bitcoin by leveraging faucet services like [coinfaucet](https://coinfaucet.eu/en/btc-testnet/), by inserting the previously generated address as the payment recipient.  
 wait for the stransaction to be validated on the testnet, you can check the progress on [mempool](https://mempool.space/testnet):  
 ![transaction](images/tx.png)  
 
@@ -67,7 +87,7 @@ wait for the stransaction to be validated on the testnet, you can check the prog
 
 Now check your lightning wallet balance:  
 ```console
-docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon walletbalance
+docker exec -it lnd-testnet lncli --macaroonpath="$MACAROON_PATH" walletbalance
 ```  
 Sample output:  
 ```json
@@ -97,13 +117,13 @@ lncli openchannel --node_key=<peer_pubkey> --local_amt=<amount_in_satoshis>
 
 so in our specific case, if we choose [this](https://1ml.com/testnet/node/02312627fdf07fbdd7e5ddb136611bdde9b00d26821d14d94891395452f67af248) node, the commands will be:  
 ```console
-docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon connect 02312627fdf07fbdd7e5ddb136611bdde9b00d26821d14d94891395452f67af248@23.237.77.12:9735
+docker exec -it lnd-testnet lncli --macaroonpath="$MACAROON_PATH" connect 02312627fdf07fbdd7e5ddb136611bdde9b00d26821d14d94891395452f67af248@23.237.77.12:9735
 ```   
 
 and  
 
 ```console
-docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon openchannel --node_key=02312627fdf07fbdd7e5ddb136611bdde9b00d26821d14d94891395452f67af248 --local_amt=50000
+docker exec -it lnd-testnet lncli --macaroonpath="$MACAROON_PATH" openchannel --node_key=02312627fdf07fbdd7e5ddb136611bdde9b00d26821d14d94891395452f67af248 --local_amt=50000
 ```   
 
 
@@ -118,7 +138,7 @@ Sample output:
 
 Now let's list our channels:  
 ```console
-docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon listchannels
+docker exec -it lnd-testnet lncli --macaroonpath="$MACAROON_PATH" listchannels
 
 {
     "channels": []
@@ -196,7 +216,7 @@ You will be presented with an invoice similar to this:
 
 Copy the invoice and pay it via your lightning wallet!  
 ```console
-docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon payinvoice lntb15u1pjhs4xspp5vjxce36ldeecntev4eqhusm99py89zwmjv42alraxkaj39ws5v2sdpzxysy2umswfjhxum0yppk76twypgxzmnwvyxqrrsscqp79qy9qsqsp59uwdjgu9nlkyh0e99kgpx3uflsnxrrhwrw0kmcjymmf3esrphflqge0x0eme35wcxtqgr05kx84ay0rl9j7qk9jgvl6fw987t4jxulrsqnu4mjl7dnhase7c39l4cxa5g8gsqtvwhry3psdp4zuzl7ghhuqp9qvzyh
+docker exec -it lnd-testnet lncli --macaroonpath="$MACAROON_PATH" payinvoice lntb15u1pjhs4xspp5vjxce36ldeecntev4eqhusm99py89zwmjv42alraxkaj39ws5v2sdpzxysy2umswfjhxum0yppk76twypgxzmnwvyxqrrsscqp79qy9qsqsp59uwdjgu9nlkyh0e99kgpx3uflsnxrrhwrw0kmcjymmf3esrphflqge0x0eme35wcxtqgr05kx84ay0rl9j7qk9jgvl6fw987t4jxulrsqnu4mjl7dnhase7c39l4cxa5g8gsqtvwhry3psdp4zuzl7ghhuqp9qvzyh
 ```   
 
 Output Sample:  
@@ -228,7 +248,7 @@ The website also confirm the payment:
 
 Now list your payment via lncli:  
 ```console
-docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon listpayments
+docker exec -it lnd-testnet lncli --macaroonpath="$MACAROON_PATH" listpayments
 ```  
 Output sample:  
 ```json
@@ -362,7 +382,7 @@ Usually you need to specify your node key in order for other nodes to be able to
 You can determine your node pubkey with the following command:
 
 ```console
-docker exec -it lnd-testnet lncli --macaroonpath=/root/.lnd/data/chain/bitcoin/testnet/admin.macaroon getinfo | grep identity_pubkey
+docker exec -it lnd-testnet lncli --macaroonpath="$MACAROON_PATH" getinfo | grep identity_pubkey
 ```
 
 Output sample:  
