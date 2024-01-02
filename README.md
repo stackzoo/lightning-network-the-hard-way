@@ -6,6 +6,23 @@ In order to follow this you dont need bitcoins on the main blockchain as we will
 > This is intended as a local lab to learn the basics of lightning node operations, don't follow this to deploy a node in production!  
 > Also Keep in mind that the utilized Bitcoins hold no intrinsic value, as they pertain to the test blockchain.  
 
+## Abstract
+The **Lightning Network** is a decentralized, off-chain scaling solution for blockchain-based cryptocurrencies, most notably designed for **Bitcoin**.  
+Introduced to address the *scalability* limitations of traditional blockchain networks, the Lightning Network enables faster and cheaper transactions by creating a secondary layer atop the primary blockchain.  
+This layer facilitates rapid and low-cost microtransactions through the establishment of **bi-directional payment channels** between users.  
+**Nodes**, integral components of the Lightning Network, act as participants that facilitate these off-chain transactions.  
+By conducting most transactions off-chain and only settling the final result on the main blockchain, the Lightning Network enhances the overall efficiency, privacy, scalability, and cost-effectiveness of cryptocurrency transactions, making it a promising solution for widespread adoption and improved usability of Bitcoin.  
+
+<br/>
+
+As is customary in Bitcoin, there exists a tradeoff between user-friendliness and control:  
+numerous custodial services are available, yet the more management is entrusted to the service provider, the less control we exert over our funds.  
+**Freedom and responsibility are directly proportional**.  
+Optimal control is achieved by running one's own Bitcoin + Lightning node and retaining possession of our private keys.  
+This tutorial provides a foundational understanding of running a Lightning node to actively participate in the network and facilitate payment transactions.  
+
+
+
 
 ## Prerequisites
 - docker
@@ -243,7 +260,7 @@ Payment hash:   648d8cc75f6e7389af2cae417e436528487289db932aaefc7d35bb2895d0a315
 Payment status: SUCCEEDED, preimage: fc510042f72e4dde9ff0566907f52b11473652351b8c591713c8b6bd47e3fc93
 ```  
 
-We succesfully completed the first payment from our own lightning node!  
+We succesfully completed the first payment from our own lightning node and it was hyperfast!  
 
 The website also confirm the payment:  
 ![confirmation](images/confirmed.png)  
